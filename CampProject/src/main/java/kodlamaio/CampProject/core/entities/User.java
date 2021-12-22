@@ -1,14 +1,15 @@
 package kodlamaio.CampProject.core.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "users")
 @Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -18,9 +19,6 @@ public class User {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-    @Column(name = "name")
-    private String name;
 
     @Column(name = "email")
     private String email;
@@ -37,5 +35,7 @@ public class User {
     @Column(name = "is_deleted")
     private boolean isDeleted;
 
+    @Column(name = "created_at")
+    private LocalDate createdAt;
 
 }

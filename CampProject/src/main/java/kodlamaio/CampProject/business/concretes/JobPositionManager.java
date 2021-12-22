@@ -1,16 +1,15 @@
 package kodlamaio.CampProject.business.concretes;
 
 import kodlamaio.CampProject.business.abstracts.JobPositionService;
-import kodlamaio.CampProject.core.utilities.results.DataResult;
-import kodlamaio.CampProject.core.utilities.results.Result;
-import kodlamaio.CampProject.core.utilities.results.SuccessDataResult;
-import kodlamaio.CampProject.core.utilities.results.SuccessResult;
+import kodlamaio.CampProject.core.utilities.business.BusinessRules;
+import kodlamaio.CampProject.core.utilities.results.*;
 import kodlamaio.CampProject.dataAccess.abstracts.JobPositionDao;
 import kodlamaio.CampProject.entities.concretes.JobPosition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class JobPositionManager implements JobPositionService {
@@ -23,27 +22,47 @@ public class JobPositionManager implements JobPositionService {
 
     @Override
     public DataResult<List<JobPosition>> getAll() {
-        return new SuccessDataResult<>(this.jobPositionDao.findAll(), "İş pozisyonları listelendi");
+        return new SuccessDataResult<>(this.jobPositionDao.findAll(), "Job positions are listed");
     }
 
     @Override
     public DataResult<JobPosition> getById(int id) {
-        return null;
+        final Optional<JobPosition> jobPosition = jobPositionDao.findById(id);
+        if(jobPosition.isEmpty()){
+            return new ErrorDataResult<>();
+        }else {
+            return new SuccessDataResult<>(jobPosition.get());
+        }
     }
 
     @Override
     public Result add(JobPosition jobPosition) {
-        this.jobPositionDao.save(jobPosition);
-        return new SuccessResult("Is pozisyonu eklendi . ");
+        final Result businessResult = BusinessRules.run(isNotExistJobPosition(jobPosition.getName()));
+        if(!businessResult.isSuccess()){
+            return businessResult;
+        }else{
+            this.jobPositionDao.save(jobPosition);
+            return new SuccessResult("Job position is added . ");
+        }
     }
 
     @Override
-    public Result delete(JobPosition entity) {
-        return null;
+    public Result isNotExistJobPosition(String jobPositionName) {
+        if(this.jobPositionDao.findByName(jobPositionName).isEmpty()){
+            return new SuccessResult();
+        }
+        return new ErrorResult("Job position is already exist . ");
     }
 
     @Override
-    public Result update(JobPosition entity) {
-        return null;
+    public Result delete(final JobPosition jobPosition) {
+        jobPositionDao.delete(jobPosition);
+        return new SuccessResult("Job position is deleted. ");
+    }
+
+    @Override
+    public Result update(final JobPosition jobPosition) {
+        jobPositionDao.save(jobPosition);
+        return new SuccessResult("Job position is updated. ");
     }
 }

@@ -6,14 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Data
 @Table(name = "job_seekers")
 @NoArgsConstructor
 @AllArgsConstructor
-@PrimaryKeyJoinColumn(name = "user_id")
+@PrimaryKeyJoinColumn(name = "user_id", referencedColumnName = "id")
 public class JobSeeker extends User {
     @Column(name = "first_name")
     private String firstName;
@@ -24,8 +24,8 @@ public class JobSeeker extends User {
     @Column(name = "identity_number")
     private String identityNumber;
 
-    @Column(name = "birth_date")
-    private LocalDate birthDate;
+    @Column(name = "birthdate")
+    private Date birthDate;
 
 
 }
