@@ -3,7 +3,6 @@ package kodlamaio.CampProject.api.controllers;
 import kodlamaio.CampProject.business.abstracts.JobPositionService;
 import kodlamaio.CampProject.core.utilities.results.DataResult;
 import kodlamaio.CampProject.core.utilities.results.Result;
-import kodlamaio.CampProject.core.utilities.results.SuccessResult;
 import kodlamaio.CampProject.entities.concretes.JobPosition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

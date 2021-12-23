@@ -25,6 +25,9 @@ public class EmployerManager implements EmployerService {
 
     @Override
     public Result add(Employer employer) {
+        if(!this.employerDao.findByEmail(employer.getEmail()).isEmpty()){
+            return new ErrorResult("Email is already exist");
+        }
         this.employerDao.save(employer);
         return new SuccessResult("Employer is added");
     }
@@ -44,7 +47,7 @@ public class EmployerManager implements EmployerService {
 
     @Override
     public DataResult<List<Employer>> getAll() {
-        return new SuccessDataResult<>(this.employerDao.findAll(), "Is verenler listelendi. ");
+        return new SuccessDataResult<>(this.employerDao.findAll(), "Employers are listed. ");
     }
 
     @Override
@@ -64,10 +67,6 @@ public class EmployerManager implements EmployerService {
         return new ErrorResult("Email already exist . ");
     }
 
-    private Result isCorporateEmailValid(String email, String website) {
-        return email.split("@")[1].equals(website) ? new SuccessResult() : new ErrorResult("Email is not valid. ");
-    }
-
     private Result arePasswordsMatches(String password, String passwordRepeat) {
         if (password.equals(passwordRepeat)) {
             return new SuccessResult();
@@ -79,10 +78,10 @@ public class EmployerManager implements EmployerService {
     @Override
     public Result register(Employer employer) {
         final Result businessRuleResult = BusinessRules.run(
-                isCorporateEmailValid(employer.getEmail(), employer.getWebsite()),
                 isNotCorporateEmailExist(employer.getEmail()),
                 arePasswordsMatches(employer.getPassword(), employer.getPasswordRepeat()),
                 userCheckService.isValidPassword(employer.getPassword()),
+                userCheckService.isValidWebsiteDiffDomain(employer.getEmail(),employer.getWebsite()),
                 userCheckService.isValidWebsite(employer.getWebsite()),
                 userCheckService.isValidPhones(employer.getPhoneNumber())
         );

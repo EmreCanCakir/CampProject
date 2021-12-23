@@ -3,8 +3,6 @@ package kodlamaio.CampProject.api.controllers;
 import kodlamaio.CampProject.business.abstracts.EmployerService;
 import kodlamaio.CampProject.core.utilities.results.DataResult;
 import kodlamaio.CampProject.core.utilities.results.Result;
-import kodlamaio.CampProject.core.utilities.results.SuccessDataResult;
-import kodlamaio.CampProject.core.utilities.results.SuccessResult;
 import kodlamaio.CampProject.entities.concretes.Employer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +28,6 @@ public class EmployersController {
 
     @PostMapping("/add")
     public Result add(@RequestBody Employer employer){
-        return this.employerService.add(employer);
+        return this.employerService.register(employer);
     }
 }

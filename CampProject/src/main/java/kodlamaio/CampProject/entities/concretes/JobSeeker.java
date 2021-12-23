@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @Data
@@ -15,17 +14,17 @@ import java.util.Date;
 @AllArgsConstructor
 @PrimaryKeyJoinColumn(name = "user_id", referencedColumnName = "id")
 public class JobSeeker extends User {
-    @Column(name = "first_name")
+    @Column(name = "first_name",nullable = false,length = 100)
     private String firstName;
 
-    @Column(name = "last_name")
+    @Column(name = "last_name",nullable = false,length = 100)
     private String lastName;
 
-    @Column(name = "identity_number")
+    @Column(name = "identity_number",nullable = false,unique = true,length = 11)
     private String identityNumber;
 
-    @Column(name = "birthdate")
-    private Date birthDate;
+    @Column(name = "birthdate",nullable = false)
+    private int birthDate;
 
 
 }

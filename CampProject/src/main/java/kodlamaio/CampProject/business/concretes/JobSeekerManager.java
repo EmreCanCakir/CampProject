@@ -1,8 +1,7 @@
 package kodlamaio.CampProject.business.concretes;
 
 import kodlamaio.CampProject.business.abstracts.JobSeekerService;
-import kodlamaio.CampProject.business.abstracts.MernisVerificationService;
-import kodlamaio.CampProject.business.adapters.PersonVerificationFromMernis;
+import kodlamaio.CampProject.business.adapters.abstracts.MernisVerificationService;
 import kodlamaio.CampProject.core.business.abstracts.UserCheckService;
 import kodlamaio.CampProject.core.utilities.business.BusinessRules;
 import kodlamaio.CampProject.core.utilities.results.*;
@@ -18,14 +17,14 @@ import java.util.Optional;
 public class JobSeekerManager implements JobSeekerService {
 
     private JobSeekerDao jobSeekerDao;
-    private PersonVerificationFromMernis personVerificationFromMernis;
     private MernisVerificationService mernisVerificationService;
     private UserCheckService userCheckService;
 
     @Autowired
-    public JobSeekerManager(JobSeekerDao jobSeekerDao, UserCheckService userCheckService) {
+    public JobSeekerManager(JobSeekerDao jobSeekerDao, UserCheckService userCheckService,MernisVerificationService mernisVerificationService) {
         this.jobSeekerDao = jobSeekerDao;
         this.userCheckService = userCheckService;
+        this.mernisVerificationService = mernisVerificationService;
     }
 
     @Override
@@ -47,13 +46,12 @@ public class JobSeekerManager implements JobSeekerService {
     @Override
     public Result register(JobSeeker jobSeeker) {
         final Result businessRulesResult = BusinessRules.run(
-                isMernisVerificationValid(),
-                arePasswordMatches(jobSeeker.getPassword(),jobSeeker.getPasswordRepeat()),
-                userCheckService.isValidPassword(jobSeeker.getPassword()),
+                mernisVerificationService.check(jobSeeker.getIdentityNumber(),jobSeeker.getFirstName(),jobSeeker.getLastName(),jobSeeker.getBirthDate()),
+                arePasswordMatches(jobSeeker.getPassword(), jobSeeker.getPasswordRepeat()),
                 userCheckService.isValidEmail(jobSeeker.getEmail()),
-                userCheckService.isValidIdentityNumber(jobSeeker.getIdentityNumber())
-                );
-        if(businessRulesResult.isSuccess() ){
+                isNotIdentityNumberExist(jobSeeker.getIdentityNumber())
+        );
+        if (businessRulesResult.isSuccess()) {
             add(jobSeeker);
             return new SuccessResult();
         }
@@ -72,7 +70,7 @@ public class JobSeekerManager implements JobSeekerService {
     public Result add(JobSeeker jobSeeker) {
         final Result result = BusinessRules.run(isNotIdentityNumberExist(jobSeeker.getIdentityNumber()), isNotEmailExist(jobSeeker.getEmail()));
         if (!result.isSuccess()) {
-            return new ErrorResult("Job Seeker is not added ");
+            return new ErrorResult("Email or identity number is already exist. Job seeker is not added ");
         } else {
             this.jobSeekerDao.save(jobSeeker);
             return new SuccessResult("Job Seeker is added");
@@ -110,18 +108,6 @@ public class JobSeekerManager implements JobSeekerService {
             return new SuccessResult();
         }
         return new ErrorResult("Password and Confirm Password are not equals. ");
-    }
-
-    public Result isMernisVerificationValid() {
-       Result isTrue =this.mernisVerificationService.check(new PersonVerificationFromMernis(personVerificationFromMernis.getIdendityNumber(),
-                personVerificationFromMernis.getFirstName(),
-                personVerificationFromMernis.getLastName(),
-                personVerificationFromMernis.getBirthYear()
-                ));
-       if(isTrue.isSuccess()){
-           return new SuccessResult("Mernis verificated. ");
-       }
-        return new ErrorResult("Mernis is not verified . ");
     }
 
 }

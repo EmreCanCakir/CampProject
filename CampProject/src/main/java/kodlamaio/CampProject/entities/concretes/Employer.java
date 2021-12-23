@@ -18,13 +18,13 @@ import javax.persistence.Table;
 @PrimaryKeyJoinColumn(name = "user_id",referencedColumnName = "id")
 public class Employer extends User {
 
-    @Column(name = "company_name")
+    @Column(name = "company_name",nullable = false,length = 100,unique = true)
     private String companyName;
 
-    @Column(name = "website")
+    @Column(name = "website",nullable = false,unique = true,length = 100)
     private String website;
 
-    @Column(name = "phone_number")
+    @Column(name = "phone_number",length = 11,nullable = false)
     private String phoneNumber;
 
 }
