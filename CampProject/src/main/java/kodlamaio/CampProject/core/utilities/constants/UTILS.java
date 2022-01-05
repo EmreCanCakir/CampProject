@@ -1,7 +1,9 @@
 package kodlamaio.CampProject.core.utilities.constants;
 
+import kodlamaio.CampProject.core.utilities.results.Result;
 import lombok.experimental.UtilityClass;
-import java.util.Locale;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 
 @UtilityClass
 public class UTILS {
@@ -17,6 +19,20 @@ public class UTILS {
         public static final String REGEX_PASSWORD = "((?=.*[a-z])(?=.*d)(?=.*[A-Z]).{6,16})";
         public static final String REGEX_WEBSITE = "^(w{3}\\.)?[^.]+(\\.\\p{javaLowerCase}{2,12})+$";
         public static final String REGEX_CORPORATE_EMAIL = "email.split(\"@\")[0].equals(website)";
+    }
+
+    public Sort getSortByDirection(Short sortDirection, String propName) {
+
+        if (sortDirection == null || sortDirection < 0) return Sort.by(Sort.Direction.DESC, propName);
+        else return Sort.by(Sort.Direction.ASC, propName);
+    }
+
+    public ResponseEntity<?> getResponseEntity(Result result){
+        if(result.isSuccess()){
+            return ResponseEntity.ok(result);
+        }else {
+            return ResponseEntity.badRequest().body(result);
+        }
     }
 
 }

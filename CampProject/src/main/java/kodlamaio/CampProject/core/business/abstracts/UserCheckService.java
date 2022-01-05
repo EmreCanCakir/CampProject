@@ -15,4 +15,5 @@ public interface UserCheckService {
     Result isValidPhones(String phoneNumber);
     Result isValidBirthdate(String birthdate);
     Result isValidIdentityNumber(String identityNumber);
+    Result arePasswordsMatches(String password, String passwordRepeat);
 }

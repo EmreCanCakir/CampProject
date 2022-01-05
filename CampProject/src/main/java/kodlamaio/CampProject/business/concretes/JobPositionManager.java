@@ -55,6 +55,11 @@ public class JobPositionManager implements JobPositionService {
     }
 
     @Override
+    public DataResult<List<JobPosition>> getAllByNameStartsWith(String name) {
+        return new SuccessDataResult<>(this.jobPositionDao.getAllByNameStartsWith(name));
+    }
+
+    @Override
     public Result delete(final JobPosition jobPosition) {
         jobPositionDao.delete(jobPosition);
         return new SuccessResult("Job position is deleted. ");

@@ -29,5 +29,8 @@ public class JobPositionsController {
         return this.jobPositionService.add(jobPosition);
     }
 
-
+    @GetMapping("/getAllByNameStartsWith")
+    public DataResult<List<JobPosition>> getAllByNameStartsWith(@RequestParam("name") String name){
+        return this.jobPositionService.getAllByNameStartsWith(name);
+    }
 }

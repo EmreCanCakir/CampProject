@@ -76,4 +76,13 @@ public class UserCheckManager implements UserCheckService {
         }
         return new SuccessResult();
     }
+
+    @Override
+    public Result arePasswordsMatches(String password, String passwordRepeat) {
+        if(!password.equals(passwordRepeat)){
+            return new ErrorResult("Password and confirm password are not same. ");
+        }
+        return new SuccessResult();
+    }
+
 }
