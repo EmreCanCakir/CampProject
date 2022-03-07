@@ -6,6 +6,8 @@ import kodlamaio.CampProject.core.utilities.business.BusinessRules;
 import kodlamaio.CampProject.core.utilities.results.*;
 import kodlamaio.CampProject.dataAccess.abstracts.EmployerDao;
 import kodlamaio.CampProject.entities.concretes.Employer;
+import kodlamaio.CampProject.entities.concretes.dtos.EmployerAddDto;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,35 +18,39 @@ import java.util.Optional;
 public class EmployerManager implements EmployerService {
     private EmployerDao employerDao;
     private UserCheckService userCheckService;
+    private ModelMapper modelMapper;
 
     @Autowired
-    public EmployerManager(EmployerDao employerDao, UserCheckService userCheckService) {
+    public EmployerManager(EmployerDao employerDao, UserCheckService userCheckService,ModelMapper modelMapper) {
         this.employerDao = employerDao;
         this.userCheckService = userCheckService;
+        this.modelMapper = modelMapper;
     }
 
     @Override
-    public Result add(Employer employer) {
-        if(!this.employerDao.findByEmail(employer.getEmail()).isEmpty()){
+    public Result add(EmployerAddDto employerAddDto) {
+        if(!this.employerDao.findByEmail(employerAddDto.getEmail()).isEmpty()){
             return new ErrorResult("Email is already exist");
         }
+        Employer employer = modelMapper.map(employerAddDto,Employer.class);
         this.employerDao.save(employer);
-        return new SuccessResult("Employer is added");
+        return new SuccessResult("Employer is registered successfully");
     }
 
 
     @Override
-    public Result delete(Employer employer) {
+    public Result delete(EmployerAddDto employerAddDto) {
+        Employer employer = modelMapper.map(employerAddDto,Employer.class);
         this.employerDao.delete(employer);
         return new SuccessResult("Employer is deleted. ");
     }
 
     @Override
-    public Result update(Employer employer) {
+    public Result update(EmployerAddDto employerAddDto) {
+        Employer employer = modelMapper.map(employerAddDto,Employer.class);
         this.employerDao.save(employer);
         return new SuccessResult("Employer is updated. ");
     }
-
     @Override
     public DataResult<List<Employer>> getAll() {
         return new SuccessDataResult<>(this.employerDao.findAll(), "Employers are listed. ");
@@ -76,20 +82,20 @@ public class EmployerManager implements EmployerService {
     }
 
     @Override
-    public Result register(Employer employer) {
+    public Result register(EmployerAddDto employerAddDto) {
         final Result businessRuleResult = BusinessRules.run(
-                isNotCorporateEmailExist(employer.getEmail()),
-                arePasswordsMatches(employer.getPassword(), employer.getPasswordRepeat()),
-                userCheckService.isValidPassword(employer.getPassword()),
-                userCheckService.isValidWebsiteDiffDomain(employer.getEmail(),employer.getWebsite()),
-                userCheckService.isValidWebsite(employer.getWebsite()),
-                userCheckService.isValidPhones(employer.getPhoneNumber())
+                isNotCorporateEmailExist(employerAddDto.getEmail()),
+                arePasswordsMatches(employerAddDto.getPassword(), employerAddDto.getPasswordRepeat()),
+                userCheckService.isValidPassword(employerAddDto.getPassword()),
+                userCheckService.isValidWebsiteDiffDomain(employerAddDto.getEmail(),employerAddDto.getWebsite()),
+                userCheckService.isValidWebsite(employerAddDto.getWebsite()),
+                userCheckService.isValidPhones(employerAddDto.getPhoneNumber())
         );
         if (!businessRuleResult.isSuccess()) {
             return businessRuleResult;
         } else {
-            add(employer);
-            return new SuccessResult("Employer is Registered successfully. ");
+            add(employerAddDto);
+            return new SuccessResult();
         }
     }
 

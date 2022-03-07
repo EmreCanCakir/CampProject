@@ -9,5 +9,6 @@ import java.util.List;
 public interface CityService extends BaseService<City> {
 
     DataResult<List<City>> getByNameStartsWith(String name);
-
+    DataResult<List<City>> getAll();
+    DataResult<City> getById(int id);
 }

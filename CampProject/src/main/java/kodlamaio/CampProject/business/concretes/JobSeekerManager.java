@@ -1,12 +1,14 @@
 package kodlamaio.CampProject.business.concretes;
 
 import kodlamaio.CampProject.business.abstracts.JobSeekerService;
-import kodlamaio.CampProject.business.adapters.abstracts.MernisVerificationService;
+import kodlamaio.CampProject.core.adapters.abstracts.MernisVerificationService;
 import kodlamaio.CampProject.core.business.abstracts.UserCheckService;
 import kodlamaio.CampProject.core.utilities.business.BusinessRules;
 import kodlamaio.CampProject.core.utilities.results.*;
 import kodlamaio.CampProject.dataAccess.abstracts.JobSeekerDao;
 import kodlamaio.CampProject.entities.concretes.JobSeeker;
+import kodlamaio.CampProject.entities.concretes.dtos.JobSeekerAddDto;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,12 +21,14 @@ public class JobSeekerManager implements JobSeekerService {
     private JobSeekerDao jobSeekerDao;
     private MernisVerificationService mernisVerificationService;
     private UserCheckService userCheckService;
+    private ModelMapper modelMapper;
 
     @Autowired
-    public JobSeekerManager(JobSeekerDao jobSeekerDao, UserCheckService userCheckService,MernisVerificationService mernisVerificationService) {
+    public JobSeekerManager(JobSeekerDao jobSeekerDao, UserCheckService userCheckService,MernisVerificationService mernisVerificationService,ModelMapper modelMapper) {
         this.jobSeekerDao = jobSeekerDao;
         this.userCheckService = userCheckService;
         this.mernisVerificationService = mernisVerificationService;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -44,15 +48,15 @@ public class JobSeekerManager implements JobSeekerService {
     }
 
     @Override
-    public Result register(JobSeeker jobSeeker) {
+    public Result register(JobSeekerAddDto jobSeekerAddDto) {
         final Result businessRulesResult = BusinessRules.run(
-                mernisVerificationService.check(jobSeeker.getIdentityNumber(),jobSeeker.getFirstName(),jobSeeker.getLastName(),jobSeeker.getBirthDate()),
-                arePasswordMatches(jobSeeker.getPassword(), jobSeeker.getPasswordRepeat()),
-                userCheckService.isValidEmail(jobSeeker.getEmail()),
-                isNotIdentityNumberExist(jobSeeker.getIdentityNumber())
+                mernisVerificationService.check(jobSeekerAddDto.getIdentityNumber(),jobSeekerAddDto.getFirstName(),jobSeekerAddDto.getLastName(),jobSeekerAddDto.getBirthDate()),
+                arePasswordMatches(jobSeekerAddDto.getPassword(), jobSeekerAddDto.getPasswordRepeat()),
+                userCheckService.isValidEmail(jobSeekerAddDto.getEmail()),
+                isNotIdentityNumberExist(jobSeekerAddDto.getIdentityNumber())
         );
         if (businessRulesResult.isSuccess()) {
-            add(jobSeeker);
+            add(jobSeekerAddDto);
             return new SuccessResult();
         }
         return new ErrorResult("Job seeker is not registered. ");
@@ -67,8 +71,9 @@ public class JobSeekerManager implements JobSeekerService {
     }
 
     @Override
-    public Result add(JobSeeker jobSeeker) {
-        final Result result = BusinessRules.run(isNotIdentityNumberExist(jobSeeker.getIdentityNumber()), isNotEmailExist(jobSeeker.getEmail()));
+    public Result add(JobSeekerAddDto jobSeekerAddDto) {
+        JobSeeker jobSeeker = modelMapper.map(jobSeekerAddDto,JobSeeker.class);
+        final Result result = BusinessRules.run(isNotIdentityNumberExist(jobSeekerAddDto.getIdentityNumber()), isNotEmailExist(jobSeekerAddDto.getEmail()));
         if (!result.isSuccess()) {
             return new ErrorResult("Email or identity number is already exist. Job seeker is not added ");
         } else {
@@ -78,13 +83,15 @@ public class JobSeekerManager implements JobSeekerService {
     }
 
     @Override
-    public Result delete(JobSeeker jobSeeker) {
+    public Result delete(JobSeekerAddDto jobSeekerAddDto) {
+        JobSeeker jobSeeker = modelMapper.map(jobSeekerAddDto,JobSeeker.class);
         this.jobSeekerDao.delete(jobSeeker);
         return new SuccessResult("Job seeker is deleted. ");
     }
 
     @Override
-    public Result update(JobSeeker jobSeeker) {
+    public Result update(JobSeekerAddDto jobSeekerAddDto) {
+        JobSeeker jobSeeker = modelMapper.map(jobSeekerAddDto,JobSeeker.class);
         this.jobSeekerDao.save(jobSeeker);
         return new SuccessResult("Job seeker is updated .");
     }

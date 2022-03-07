@@ -1,18 +1,19 @@
 package kodlamaio.CampProject.core.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import kodlamaio.CampProject.entities.concretes.Image;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
 @Data
-@Getter
-@Setter
+@EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -44,4 +45,10 @@ public class User {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+    @OneToMany(mappedBy = "user")
+    @JsonIgnoreProperties(value = {"user"})
+    private List<Image> images;
+
+    public User(int userId) {
+    }
 }

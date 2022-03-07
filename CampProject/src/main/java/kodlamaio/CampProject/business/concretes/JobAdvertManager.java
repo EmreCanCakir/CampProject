@@ -5,7 +5,9 @@ import kodlamaio.CampProject.core.utilities.business.BusinessRules;
 import kodlamaio.CampProject.core.utilities.results.*;
 import kodlamaio.CampProject.dataAccess.abstracts.JobAdvertDao;
 import kodlamaio.CampProject.entities.concretes.JobAdvert;
+import kodlamaio.CampProject.entities.concretes.dtos.JobAdvertDto;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +19,12 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class JobAdvertManager implements JobAdvertService {
     private JobAdvertDao jobAdvertDao;
+    private ModelMapper modelMapper;
 
     @Autowired
-    public JobAdvertManager(JobAdvertDao jobAdvertDao) {
+    public JobAdvertManager(JobAdvertDao jobAdvertDao,ModelMapper modelMapper) {
         this.jobAdvertDao = jobAdvertDao;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -107,29 +111,32 @@ public class JobAdvertManager implements JobAdvertService {
     }
 
     @Override
-    public Result add(JobAdvert entity) {
+    public Result add(JobAdvertDto jobAdvertDto) {
+        JobAdvert jobAdvert = modelMapper.map(jobAdvertDto,JobAdvert.class);
         final Result result = BusinessRules.run(
-          getById(entity.getId()),
-          findByJobAdvertName(entity.getJobAdvertName()),
-          existsByCityIdAndJobPositionIdAndEmployerId(entity.getCity().getId(),entity.getJobPosition().getId(),entity.getEmployer().getId())
+          getById(jobAdvertDto.getId()),
+          findByJobAdvertName(jobAdvertDto.getJobAdvertName()),
+          existsByCityIdAndJobPositionIdAndEmployerId(jobAdvertDto.getCityId(),jobAdvertDto.getJobPositionId(),jobAdvertDto.getEmployerId())
         );
         if(!result.isSuccess()){
             return new ErrorResult("Job advert is already exist");
         }else {
-            this.jobAdvertDao.save(entity);
+            this.jobAdvertDao.save(jobAdvert);
             return new SuccessResult();
         }
     }
 
     @Override
-    public Result delete(JobAdvert entity) {
-        this.jobAdvertDao.delete(entity);
+    public Result delete(JobAdvertDto jobAdvertDto) {
+        JobAdvert jobAdvert = modelMapper.map(jobAdvertDto,JobAdvert.class);
+        this.jobAdvertDao.delete(jobAdvert);
         return new SuccessResult();
     }
 
     @Override
-    public Result update(JobAdvert entity) {
-        this.jobAdvertDao.save(entity);
+    public Result update(JobAdvertDto jobAdvertDto) {
+        JobAdvert jobAdvert = modelMapper.map(jobAdvertDto,JobAdvert.class);
+        this.jobAdvertDao.save(jobAdvert);
         return new SuccessResult();
     }
 

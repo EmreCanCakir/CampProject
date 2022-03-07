@@ -1,5 +1,6 @@
 package kodlamaio.CampProject.entities.concretes;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
@@ -23,7 +24,8 @@ public class JobPosition {
     private String name;
 
     @OneToMany(mappedBy = "jobPosition")
+    @JsonIgnore
+    @JsonIgnoreProperties(value = "jobPosition")
     private List<JobAdvert> jobAdverts;
-
 
 }

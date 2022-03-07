@@ -4,12 +4,17 @@ import kodlamaio.CampProject.core.business.abstracts.BaseService;
 import kodlamaio.CampProject.core.utilities.results.DataResult;
 import kodlamaio.CampProject.core.utilities.results.Result;
 import kodlamaio.CampProject.entities.concretes.JobAdvert;
+import kodlamaio.CampProject.entities.concretes.dtos.JobAdvertDto;
 import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
 import java.util.List;
 
-public interface JobAdvertService extends BaseService<JobAdvert> {
+public interface JobAdvertService extends BaseService<JobAdvertDto> {
+
+    DataResult<List<JobAdvert>> getAll();
+
+    DataResult<JobAdvert> getById(int id);
 
     Result findByJobAdvertName(String jobAdvertName);
 
@@ -31,13 +36,13 @@ public interface JobAdvertService extends BaseService<JobAdvert> {
 
     Result updateVerification(boolean status, int jobAdvertId);
 
- //   Result updateLastModifiedAt(int id, LocalDateTime lastModifiedAt);
+    //   Result updateLastModifiedAt(int id, LocalDateTime lastModifiedAt);
 
- //   Result updateMinSalary(int id, int minSalary);
+    //   Result updateMinSalary(int id, int minSalary);
 
- //   Result updateMaxSalary(int id, int maxSalary);
+    //   Result updateMaxSalary(int id, int maxSalary);
 
- //   Result updateDeadline(int id, LocalDate dateLine);
+    //   Result updateDeadline(int id, LocalDate dateLine);
 
- //   Result applyChanges(int id);
+    //   Result applyChanges(int id);
 }

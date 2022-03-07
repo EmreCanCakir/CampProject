@@ -1,21 +1,22 @@
 package kodlamaio.CampProject.entities.concretes;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
-@Getter
-@Setter
 @Entity
 @Data
+@EntityListeners(AuditingEntityListener.class)       //This provides to keep lastModifiedDate and creationTimeStamp values in [];
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "job_adverts")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class JobAdvert {
     @Id
     @Column(name = "id")
@@ -29,23 +30,26 @@ public class JobAdvert {
     @Column(name = "description",nullable = false,length = 250)
     private String description;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "job_position_id",nullable = false)
+    @JsonIgnoreProperties(value = {"jobAdverts"})
     private JobPosition jobPosition;
 
     @ManyToOne
     @JoinColumn(name = "city_id",nullable = false)
+    @JsonIgnoreProperties(value = {"jobAdverts"})
     private City city;
 
     @ManyToOne
     @JoinColumn(name = "employer_id",nullable = false)
+    @JsonIgnoreProperties(value = {"jobAdverts","password","passwordRepeat","createdAt"})
     private Employer employer;
 
     @Column(name = "min_salary",nullable = true)
-    private String minSalary;
+    private double minSalary;
 
     @Column(name = "max_salary",nullable = true)
-    private String maxSalary;
+    private double maxSalary;
 
     @Column(name = "created_at",nullable = false,updatable = false)
     @CreationTimestamp
@@ -57,11 +61,11 @@ public class JobAdvert {
     @Column(name = "is_active",nullable = false)
     private boolean active;
 
-    @Column(name = "is_verified",nullable = false)
+    @Column(name = "is_verified",nullable = true)
     private boolean verified;
 
     @Column(name = "open_positions_amount")
-    private String openPositionsAmount;
+    private int openPositionsAmount;
 
     @LastModifiedDate
     @Column(name = "last_modified_at")

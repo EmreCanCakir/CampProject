@@ -1,6 +1,5 @@
 package kodlamaio.CampProject.dataAccess.abstracts;
 
-import kodlamaio.CampProject.core.utilities.results.DataResult;
 import kodlamaio.CampProject.entities.concretes.Employer;
 import org.springframework.data.jpa.repository.JpaRepository;
 

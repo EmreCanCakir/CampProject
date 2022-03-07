@@ -4,6 +4,7 @@ import kodlamaio.CampProject.business.abstracts.JobSeekerService;
 import kodlamaio.CampProject.core.utilities.results.DataResult;
 import kodlamaio.CampProject.core.utilities.results.Result;
 import kodlamaio.CampProject.entities.concretes.JobSeeker;
+import kodlamaio.CampProject.entities.concretes.dtos.JobSeekerAddDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,8 +24,8 @@ public class JobSeekersController {
         return this.jobSeekerService.getAll();
     }
     @PostMapping("/add")
-    public Result add(@RequestBody JobSeeker jobSeeker){
-        return this.jobSeekerService.register(jobSeeker);
+    public Result add(@RequestBody JobSeekerAddDto jobSeekerAddDto){
+        return this.jobSeekerService.register(jobSeekerAddDto);
     }
 
 

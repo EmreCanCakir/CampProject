@@ -12,4 +12,5 @@ public interface JobPositionService extends BaseService<JobPosition> {
     Result add(JobPosition jobPosition);
     Result isNotExistJobPosition(String jobPositionName);
     DataResult<List<JobPosition>> getAllByNameStartsWith(String name);
+    DataResult<JobPosition> getById(int id);
 }

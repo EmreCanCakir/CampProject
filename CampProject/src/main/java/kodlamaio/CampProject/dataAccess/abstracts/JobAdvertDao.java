@@ -46,9 +46,9 @@ public interface JobAdvertDao extends JpaRepository<JobAdvert, Integer> {
     @Query("update JobAdvert j set j.verified =: status where j.id =: id ")
     void updateVerified(@Param(value = "status") boolean status, @Param(value = "id") int id);
 
-   // @Modifying
-   // @Query("update JobAdvert j set j.lastModifiedAt = : lastModifiedAt where j.id = :id")
-   // void updateLastModifiedAt(@Param(value = "id") int id, LocalDateTime lastModifiedAt);
+  //  @Modifying
+ //   @Query("update JobAdvert j set j.lastModifiedAt = : lastModifiedAt where j.id = :id")
+    //void updateLastModifiedAt(@Param(value = "id") int id, LocalDateTime lastModifiedAt);
 
 
 }

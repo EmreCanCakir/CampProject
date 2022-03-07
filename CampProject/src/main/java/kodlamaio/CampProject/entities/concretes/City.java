@@ -1,5 +1,6 @@
 package kodlamaio.CampProject.entities.concretes;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "cities")
-@JsonIgnoreProperties({"hibernateLazyInitializer","handler","jobAdverts"})
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 public class City {
     @Id
     @Column(name = "id")
@@ -25,5 +26,7 @@ public class City {
     private String name;
 
     @OneToMany(mappedBy = "city")
+    @JsonIgnoreProperties(value = "city")
+    @JsonIgnore
     private List<JobAdvert> jobAdverts;
 }

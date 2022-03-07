@@ -1,5 +1,7 @@
 package kodlamaio.CampProject;
 
+import com.cloudinary.*;
+import com.cloudinary.utils.ObjectUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -8,20 +10,25 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
+
 @SpringBootApplication
 @EnableSwagger2
 public class CampProjectApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(CampProjectApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(CampProjectApplication.class, args);
 
-	@Bean
-	public Docket api() {
-		return new Docket(DocumentationType.SWAGGER_2)
-				.select()
-				.apis(RequestHandlerSelectors.basePackage("kodlamaio.CampProject"))
-				.build();
-	}
+    }
+
+    @Bean
+    public Docket api() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("kodlamaio.CampProject"))
+                .build();
+    }
 
 }

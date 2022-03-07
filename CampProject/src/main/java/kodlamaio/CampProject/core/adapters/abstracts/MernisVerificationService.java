@@ -1,4 +1,4 @@
-package kodlamaio.CampProject.business.adapters.abstracts;
+package kodlamaio.CampProject.core.adapters.abstracts;
 
 import kodlamaio.CampProject.core.utilities.results.Result;
 

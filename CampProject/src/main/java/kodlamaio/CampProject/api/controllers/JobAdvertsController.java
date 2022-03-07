@@ -5,6 +5,7 @@ import kodlamaio.CampProject.core.utilities.constants.UTILS;
 import kodlamaio.CampProject.core.utilities.results.DataResult;
 import kodlamaio.CampProject.core.utilities.results.Result;
 import kodlamaio.CampProject.entities.concretes.JobAdvert;
+import kodlamaio.CampProject.entities.concretes.dtos.JobAdvertDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,8 +29,8 @@ public class JobAdvertsController {
     }
 
     @PostMapping("/add")
-    public Result add(@RequestBody JobAdvert jobAdvert) {
-        return this.jobAdvertService.add(jobAdvert);
+    public Result add(@RequestBody JobAdvertDto jobAdvertDto) {
+        return this.jobAdvertService.add(jobAdvertDto);
     }
 
     @GetMapping("findAllByEmployerId")

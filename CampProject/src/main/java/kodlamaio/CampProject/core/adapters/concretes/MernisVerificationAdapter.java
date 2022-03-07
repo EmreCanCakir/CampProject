@@ -1,11 +1,10 @@
-package kodlamaio.CampProject.business.adapters.concretes;
+package kodlamaio.CampProject.core.adapters.concretes;
 
-import kodlamaio.CampProject.business.adapters.abstracts.MernisVerificationService;
+import kodlamaio.CampProject.core.adapters.abstracts.MernisVerificationService;
 import kodlamaio.CampProject.core.utilities.results.ErrorResult;
 import kodlamaio.CampProject.core.utilities.results.Result;
 import kodlamaio.CampProject.core.utilities.results.SuccessResult;
 import mernis.HEFKPSPublicSoap;
-import mernis.HEFKPSPublicSoap12;
 import org.springframework.stereotype.Service;
 
 @Service
